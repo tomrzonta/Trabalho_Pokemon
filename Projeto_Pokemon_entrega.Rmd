@@ -79,6 +79,17 @@ stronger <- df %>% group_by(Generation) %>% summarise(Mais_Forte = Name[which.ma
 print(stronger)
 ```
 
+
+## Gráfico de apresentação
+
+Veremos o gráfico apresentando os dados dos pokemons mais fortes e fracos de cada geração.
+
+```{r gráfico_forte_fraco}
+ggplot(data = stronger) +
+  geom_point(mapping = aes(x = Mais_Forte,  y = max_atack)) +
+  geom_point(mapping = aes(x = Mais_Fraco, y = min_atack))
+```
+
 ## Buscando outliers
 
 Poderemos ver se há pokemons que fogem a média dos outros.
@@ -89,17 +100,6 @@ df %>% dplyr::select(Generation, Attack) %>%
   xlab('Geração') +
   ylab('Ataque') +
   theme_classic()
-```
-
-
-## Gráfico de apresentação
-
-Veremos o gráfico apresentando os dados dos pokemons mais fortes e fracos de cada geração.
-
-```{r gráfico_forte_fraco}
-ggplot(data = stronger) +
-  geom_point(mapping = aes(x = Mais_Forte,  y = max_atack)) +
-  geom_point(mapping = aes(x = Mais_Fraco, y = min_atack))
 ```
 
 ## Mais forte por tipo.1
