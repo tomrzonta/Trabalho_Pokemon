@@ -81,7 +81,6 @@ Vamos visualizar a frequência com que cada tipo.1 aparece na nossa tabela.
 df %>% dplyr::select(Type.1) %>% summarytools::freq()
 ```
 
-
 ## Primeira comparação de poder de ataque
 
 Vamos usar um um código para trazer de cada geração registrada o pokemon mais forte e mais fraco.
@@ -104,7 +103,6 @@ df %>% dplyr::select(Generation, Attack) %>%
   ylab('Ataque') +
   theme_classic()
 ```
-
 
 
 ## Gráfico de apresentação

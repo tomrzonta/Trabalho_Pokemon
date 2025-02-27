@@ -23,22 +23,35 @@ library(dlookr)
 
 renv::init()
 renv::snapshot()
+
+## Importar Base
+
 df <- read.csv("C:/Users/Pichau/Documents/RSTUDIO/Estatistica_para_Ciencia_Dados/pokemon.csv", stringsAsFactors = FALSE)
+
+## Contagem de linhas
 
 count(df)
 
+## Início da tabela
+
 kable(head(df))
+
+## Tipo de dado
 
 df %>% dlookr::diagnose()
 
+## Frequência por tipo
+
 df %>% dplyr::select(Type.1) %>% summarytools::freq()
 
-
+## Primeira comparação de poder de ataque
 
 stronger <- df %>% group_by(Generation) %>% summarise(Mais_Forte = Name[which.max(Attack)],max_atack = max(Attack, na.rm = TRUE),
                                                       Mais_Fraco = Name[which.min(Attack)], min_atack = min(Attack, na.rm = TRUE))
 
 print(stronger)
+
+## Buscando outliers
 
 ggplot(data = stronger) +
   geom_point(mapping = aes(x = Mais_Forte,  y = max_atack)) +
