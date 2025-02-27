@@ -3,8 +3,8 @@ title: "Projeto_Pokemon"
 author: "Thomas Raphael Zonta"
 date: "2025-02-20"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include= TRUE}
@@ -16,19 +16,6 @@ knitr::opts_chunk$set(echo = FALSE)
 Essas foram as bibliotecas importadas para a realização desta análise.
 
 ```{r bibliotecas}
-
-renv::activate()
-install.packages("summarytools")
-install.packages("renv")
-install.packages("tidyverse")
-install.packages("ggplot2")
-install.packages("readr")
-install.packages("dplyr")
-install.packages("summarytools")
-install.packages("readxl")
-install.packages("knitr")
-install.packages("dlookr")
-
 
 library(tidyverse)
 library(ggplot2)
