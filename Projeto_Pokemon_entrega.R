@@ -1,7 +1,7 @@
 # TRABALHO = BASE_POKEMON
 renv::activate()
 install.packages("summarytools")
-
+install.packages("renv")
 install.packages("tidyverse")
 install.packages("ggplot2")
 install.packages("readr")
@@ -11,6 +11,7 @@ install.packages("readxl")
 install.packages("knitr")
 install.packages("dlookr")
 
+library(renv)
 library(tidyverse)
 library(ggplot2)
 library(readr)
@@ -20,6 +21,8 @@ library(readxl)
 library(knitr)
 library(dlookr)
 
+renv::init()
+renv::snapshot()
 df <- read.csv("C:/Users/Pichau/Documents/RSTUDIO/Estatistica_para_Ciencia_Dados/pokemon.csv", stringsAsFactors = FALSE)
 
 count(df)
