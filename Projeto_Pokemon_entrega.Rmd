@@ -1,0 +1,220 @@
+---
+title: "Projeto_Pokemon"
+author: "Thomas Raphael Zonta"
+date: "2025-02-20"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include= TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Bibliotecas
+
+Essas foram as bibliotecas importadas para a realização desta análise.
+
+```{r bibliotecas}
+
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(summarytools)
+library(readxl)
+library(knitr)
+library(dlookr)
+```
+## Base de dados Pokemon
+
+ A ideia do projeto é dentro da base de dados estipular quais pokemons dentro das 6 gerações catalogadas são os mais fortes utilizando a coluna que registra os dados de ataque básico. A seguir vamos carregas a nossa base de dados:
+
+```{r base_pokemon}
+df <- read.csv("C:/Users/Pichau/Documents/RSTUDIO/Estatistica_para_Ciencia_Dados/pokemon.csv", stringsAsFactors = FALSE)
+
+
+```
+
+## Análises iniciais da tabela
+
+Contagem do número de linhas da tabela.
+
+```{r primeiras analises}
+count(df)
+```
+
+## Visualização das colunas da tabela.
+
+Vamos visualizar o topo da base de dados para vermos os dados que teremos para trabalhar.
+
+```{r topo da coluna}
+kable(head(df))
+```
+
+## Tipos de dados da base de dados
+
+Vamos visualizar o tipo de dados de cada coluna da nossa tabela.
+
+```{r tipo}
+df %>% dlookr::diagnose()
+```
+
+## Frequência por tipo
+
+Vamos visualizar a frequência com que cada tipo.1 aparece na nossa tabela.
+
+```{r tipo_pokemon}
+df %>% dplyr::select(Type.1) %>% summarytools::freq()
+```
+
+
+## Primeira comparação de poder de ataque
+
+Vamos usar um um código para trazer de cada geração registrada o pokemon mais forte e mais fraco.
+
+```{r analise geração}
+stronger <- df %>% group_by(Generation) %>% summarise(Mais_Forte = Name[which.max(Attack)],max_atack = max(Attack, na.rm = TRUE),
+                                                      Mais_Fraco = Name[which.min(Attack)], min_atack = min(Attack, na.rm = TRUE))
+
+print(stronger)
+```
+
+## Buscando outliers
+
+Poderemos ver se há pokemons que fogem a média dos outros.
+
+```{r outliers}
+df %>% dplyr::select(Generation, Attack) %>%
+  ggplot(aes(group = Generation, x=Generation, y = Attack)) + geom_boxplot() +
+  xlab('Geração') +
+  ylab('Ataque') +
+  theme_classic()
+```
+
+
+
+## Gráfico de apresentação
+
+Veremos o gráfico apresentando os dados dos pokemons mais fortes e fracos de cada geração.
+
+```{r gráfico_forte_fraco}
+ggplot(data = stronger) +
+  geom_point(mapping = aes(x = Mais_Forte,  y = max_atack)) +
+  geom_point(mapping = aes(x = Mais_Fraco, y = min_atack))
+```
+
+## Mais forte por tipo.1
+
+Veremos a lista dos mais fortes pokemons por seu tipo.
+
+```{r forte_tipo}
+Mais_forte_Tipo <- df %>% group_by(Type.1) %>% summarise(Mais_forte_tipo1 = Name[which.max(Attack)],
+                                                         max_forte = max(Attack, na.rm = TRUE)) %>% arrange(desc(max_forte))
+Mais_forte_Tipo
+```
+
+## Media de ataque 
+
+A média de ataque dos pokemons calculada na geração.
+
+```{r media}
+media_por_geracao <- df %>% group_by(Generation) %>% summarise(media = mean(Attack, na.rm = TRUE)) %>%
+  arrange(Generation)
+
+media_por_geracao
+```
+
+## ## Estatísticas de ataque
+
+Estatistica de ataque dos pokemons calculada por geração.
+
+```{r estatistica_ataque}
+estatisticas_attack <- df %>% group_by(Generation) %>%
+  summarise(
+    media = mean(Attack, na.rm = TRUE),
+    desvio = sd(Attack, na.rm = TRUE),
+    prim_quartil = quantile(Attack, 0.25, na.rm = TRUE),
+    terc_quartil = quantile(Attack, 0.75, na.rm = TRUE)
+  )
+
+print(estatisticas_attack)
+```
+
+## Comparação de tipo e geração com base no ataque
+
+Gráfico trazendo 3 parametros para demonstração: Geração, Tipo e Ataque
+
+```{r 3_fatores}
+df %>% ggplot(aes(x= Type.1, y= Generation, fill = Attack)) +
+  geom_tile() +
+  xlab("Tipo") +
+  ylab("Geração")
+```
+
+## Função DESC
+
+```{r desc}
+df %>%  group_by(Generation) %>% dplyr::select(Attack) %>% summarytools::descr()
+```
+
+## Histograma de poder de ataque por quantidade
+
+Separação por quantidade de pokemons nivelado por seu poder de ataque com bins = 10
+
+```{r ataque}
+ggplot(df, aes(x = Attack)) +
+  geom_histogram(binwidth = 10, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Histograma de Ataque", x = "Attack", y = "Quantidade") +
+  theme_minimal()
+```
+
+## Distribuição de ataque separado por geração
+
+Aqui podemos analisar separadamente cada geração  com o gráfico violino o lado para o qual a calda pende, mostrando uma curva assimétrica com calda prolongada para direita.
+
+```{r violino}
+ggplot(df, aes(x = as.factor(Generation), y = Attack, fill = as.factor(Generation))) +
+  geom_violin(alpha = 0.5) +
+  labs(title = "Distribuição de Ataque por Geração", x = "Geração", y = "Ataque") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+## Scatterplot entre ataque e defesa
+
+Veremos um scatterplot entre ataque e defesa separados por tipo.1 de pokemon vendo se há correlação ao fato de um pokemon com alto ataque também tem um alto índice de defesa ou não.
+
+```{r scatterplot}
+ggplot(df, aes(x = Attack, y = Defense, color = as.factor(Type.1))) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Scatterplot de Attack vs. Defense",
+       x = "Attack", y = "Defense", color = "Tipo de Pokémon") +
+  theme_minimal()
+```
+
+## ## Gráfico de linha 
+
+Veremos um gráfico de linha calculando a médita de ataque por geração.
+
+```{r linha}
+df_summary <- df %>%
+  group_by(Generation) %>%
+  summarise(Media_Attack = mean(Attack, na.rm = TRUE))
+
+ggplot(df_summary, aes(x = Generation, y = Media_Attack)) +
+  geom_line(color = "blue", size = 1) +  
+  geom_point(color = "red", size = 3) + 
+  labs(title = "Media de Ataque por Geracao", x = "Geracao", y = "Media de Ataque") +
+  theme_minimal()
+```
+
+
+
+
+
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
