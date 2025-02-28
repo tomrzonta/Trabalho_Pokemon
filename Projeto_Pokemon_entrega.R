@@ -1,15 +1,4 @@
 # TRABALHO = BASE_POKEMON
-renv::activate()
-install.packages("summarytools")
-install.packages("renv")
-install.packages("tidyverse")
-install.packages("ggplot2")
-install.packages("readr")
-install.packages("dplyr")
-install.packages("summarytools")
-install.packages("readxl")
-install.packages("knitr")
-install.packages("dlookr")
 
 library(renv)
 library(tidyverse)
@@ -135,3 +124,5 @@ ggplot(df_summary, aes(x = Generation, y = Media_Attack)) +
   geom_point(color = "red", size = 3) + 
   labs(title = "Media de Ataque por Geracao", x = "Geracao", y = "Media de Ataque") +
   theme_minimal()
+
+

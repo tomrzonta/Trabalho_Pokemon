@@ -5,10 +5,11 @@ date: "2025-02-20"
 output:
   pdf_document: default
   html_document: default
+  word_document: default
 ---
 
 ```{r setup, include= TRUE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Bibliotecas
@@ -209,7 +210,12 @@ ggplot(df_summary, aes(x = Generation, y = Media_Attack)) +
 ```
 
 
+## Instalação RStudio
 
+![Programa instalado na máquina](C:/Users/Pichau/Documents/RSTUDIO/Trabalho_Pokemon/areadetrabalho.jpg)
+
+
+![dataset no ambiente do RStudio](C:/Users/Pichau/Documents/RSTUDIO/Trabalho_Pokemon/basecarregada.png)
 
 
 
